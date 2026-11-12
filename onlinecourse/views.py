@@ -143,6 +143,6 @@ def show_exam_result(request, course_id, submission_id):
     earned_points = sum(question.grade for question in questions if question.is_get_score(selected_ids))
     grade = round(100 * earned_points / total_points, 1) if total_points else 0
     context = {'course': course, 'submission': submission, 'choices': submission.choices.all(),
-               'grade': grade, 'passed': total_points > 0 and grade >= 80,
+               'selected_ids': selected_ids, 'grade': grade, 'passed': total_points > 0 and grade >= 80,
                'earned_points': earned_points, 'total_points': total_points}
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)

@@ -28,9 +28,6 @@ class QuestionAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
     list_display = ('question_text', 'course', 'grade')
 
-    @admin.display(description='Question text', ordering='content')
-    def question_text(self, obj):
-        return obj.content
 
 
 class LessonAdmin(admin.ModelAdmin):

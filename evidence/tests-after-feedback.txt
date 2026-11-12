@@ -1,9 +1,22 @@
+$ python manage.py makemigrations --check --dry-run
+No changes detected
+
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, onlinecourse, sessions
+Running migrations:
+  Applying onlinecourse.0002_assessment_field_names... OK
+
+$ python manage.py test
 Found 6 test(s).
 System check identified no issues (0 silenced).
 Creating test database for alias 'default'...
 ......
 ----------------------------------------------------------------------
-Ran 6 tests in 0.351s
+Ran 6 tests in 0.359s
 
 OK
 Destroying test database for alias 'default'...
+
+$ python manage.py check
+System check identified no issues (0 silenced).
