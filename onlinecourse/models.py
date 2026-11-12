@@ -1,13 +1,7 @@
-import sys
 from django.utils.timezone import now
-try:
-    from django.db import models
-except Exception:
-    print("There was an error loading django modules. Do you have django installed?")
-    sys.exit()
+from django.db import models
 
 from django.conf import settings
-import uuid
 
 
 # Instructor model
@@ -94,10 +88,36 @@ class Enrollment(models.Model):
     mode = models.CharField(max_length=5, choices=COURSE_MODES, default=AUDIT)
     rating = models.FloatField(default=5.0)
 
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "course"], name="one_enrollment_per_user_course")]
 
-# One enrollment could have multiple submission
-# One submission could have multiple choices
-# One choice could belong to multiple submissions
-#class Submission(models.Model):
-#    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-#    choices = models.ManyToManyField(Choice)
+
+class Question(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    grade = models.PositiveIntegerField(default=50)
+
+    def __str__(self):
+        return self.content
+
+    def is_get_score(self, selected_ids):
+        correct = set(self.choice_set.filter(is_correct=True).values_list('id', flat=True))
+        own_choices = set(self.choice_set.values_list('id', flat=True))
+        selected = set(selected_ids) & own_choices
+        # Selecting extra incorrect answers must not earn credit.
+        return bool(correct) and selected == correct
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.content
+
+
+class Submission(models.Model):
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
+    choices = models.ManyToManyField(Choice, blank=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)

@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.venv/
+.local-login.json
+*.sqlite3
+__pycache__/
+.env
+
+static/media/course_images/django_*.png
