@@ -44,12 +44,12 @@ class ExamTests(TestCase):
 
     def test_result_ownership_and_course_are_enforced(self):
         submission = Submission.objects.create(enrollment=self.enrollment)
-        result = reverse('onlinecourse:exam_result', args=[self.course.pk, submission.pk])
+        result = reverse('onlinecourse:show_exam_result', args=[self.course.pk, submission.pk])
         self.client.force_login(self.other)
         self.assertEqual(self.client.get(result).status_code, 404)
         self.assertEqual(self.client.post(self.submit_url, {}).status_code, 404)
         self.client.force_login(self.user)
-        wrong_course = reverse('onlinecourse:exam_result', args=[self.other_course.pk, submission.pk])
+        wrong_course = reverse('onlinecourse:show_exam_result', args=[self.other_course.pk, submission.pk])
         self.assertEqual(self.client.get(wrong_course).status_code, 404)
 
     def test_login_and_post_required(self):

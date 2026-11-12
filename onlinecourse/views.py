@@ -130,7 +130,7 @@ def submit(request, course_id):
     with transaction.atomic():
         submission = Submission.objects.create(enrollment=enrollment)
         submission.choices.set(selected_choices)
-    return HttpResponseRedirect(reverse('onlinecourse:exam_result', args=(course.id, submission.id)))
+    return HttpResponseRedirect(reverse('onlinecourse:show_exam_result', args=(course.id, submission.id)))
 
 
 @login_required
